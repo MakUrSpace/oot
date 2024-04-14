@@ -24,7 +24,7 @@
         </div>
         <div class="col" align="center">
             <h3 align="center">Observer Camera Stream</h3>
-            <p>Observed zone outlined in green; Objects of interest annotated in blue; Counted trucks annotated in green</p>
+            <p>Observed zone outlined in cyan; Objects of interest annotated in blue; Counted trucks annotated in green</p>
             <div id="ObserverActiveZone">
                 <input type="text" name="az" id="camobserver_ActiveZone" value="{active_zone}" size="50" hx-post="/active_zone" hx-swap="none">
                 <input type="button" name="clear_az" id="clear_az" value="Clear Active Zone" onclick="clearCamAZ('observer', event)">
@@ -33,7 +33,10 @@
         </div>
     </div>
     <div class="row" align="center">
-        <div class="col" align="center">
+        <div class="col" align="left">
+            <input type="button" class="btn btn-primary" value="Clear Data" hx-post="/clear_data" hx-swap="none">
+        </div>
+        <div class="col" align="right">
             <input type="button" class="btn btn-primary" value="Save Configuration and Data" hx-post="/save" hx-swap="none">
         </div>
     </div>

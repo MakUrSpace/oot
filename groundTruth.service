@@ -1,0 +1,16 @@
+[Unit]
+Description=Ground Truth Server Service
+
+[Service]
+ExecStart=/home/musengdir/oot/venv/bin/python /home/musengdir/oot/groundTruthServer.py
+Restart=always
+RestartSec=10                       
+StandardOutput=syslog               
+StandardError=syslog                
+SyslogIdentifier=groundTruth
+WorkingDirectory=/home/musengdir/oot
+Environment=PYTHONUNBUFFERED=1
+
+
+[Install]
+WantedBy=multi-user.target
