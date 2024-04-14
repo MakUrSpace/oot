@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <script src="/bootstrap.min.js"></script>
+    <script src="/htmx.min.js"></script>
+
+    <title>Ground Truth Data</title>
+</head>
+<body>
+<div class="container">
+    <h1 align="center">Ground Truth Data</h1>
+    <div class="row" align="center">
+        <p>A project to build foundational market data sets from camera streams utilizing image recognition AI.</p>
+    </div>
+    <div class="row" align="center">
+        <div class="col" align="center">
+            <h3 align="center">Observed Trucks over Time</h3>
+            <img class="img-fluid border border-info border-3" style="border-radius: 50px; border-width: 3" src="/analyzer" alt="Graph of Objects Over Time">
+        </div>
+        <div class="col" align="center">
+            <h3 align="center">Observer Camera Stream</h3>
+            <p>Observed zone outlined in green; Objects of interest annotated in blue; Counted trucks annotated in green</p>
+            <div id="ObserverActiveZone">
+                <input type="text" name="az" id="camobserver_ActiveZone" value="{active_zone}" size="50" hx-post="/active_zone" hx-swap="none">
+                <input type="button" name="clear_az" id="clear_az" value="Clear Active Zone" onclick="clearCamAZ('observer', event)">
+            </div>
+            <img class="img-fluid border border-info border-3" style="border-radius: 50px; border-width: 3" src='/observer' id="observer" alt='Image Stream' onclick="camClickListener('observer', event)">
+        </div>
+    </div>
+    <div class="row" align="center">
+        <div class="col" align="center">
+            <input type="button" class="btn btn-primary" value="Save Configuration and Data" hx-post="/save" hx-swap="none">
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    function clearCamAZ(camName, event) {
+        const formField = document.getElementById(`cam${camName}_ActiveZone`)
+        formField.value = '[]'
+    }
+    
+    function camClickListener(camName, event) {
+        const imgElem = document.getElementById(`observer`)
+        const bounds = imgElem.getBoundingClientRect();
+        const left = bounds.left;
+        const top = bounds.top;
+        const x = event.x - left;
+        const y = event.y - top;
+        const cw = imgElem.clientWidth
+        const ch = imgElem.clientHeight
+        const iw = imgElem.naturalWidth
+        const ih = imgElem.naturalHeight
+        const px = x / cw * iw
+        const py = y / ch * ih
+        //console.log("img element points: ", px, py)
+        const x_offset = 0
+        const x_scale = 1
+        const image_x = (px - x_offset) * x_scale
+        const y_offset = 0
+        const y_scale = 1
+        const image_y = (py - y_offset) * y_scale
+        const formField = document.getElementById(`cam${camName}_ActiveZone`)
+        var formValue
+        try {
+          formValue = JSON.parse(formField.value)
+        }
+        catch(err) {
+          formValue = []
+        }
+        formValue.push([~~image_x, ~~image_y])
+        formField.value = JSON.stringify(formValue)
+        formField.dispatchEvent(new Event('change'));
+    }
+</script>
+</html>
